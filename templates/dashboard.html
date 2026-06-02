@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lojistik Mobil Panel</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial;
+    background:#f2f4f7;
+}
+
+/* TOP BAR */
+.topbar{
+    background:#1f3c88;
+    color:white;
+    padding:15px;
+    text-align:center;
+    font-size:18px;
+    position:sticky;
+    top:0;
+}
+
+/* WRAPPER */
+.container{
+    padding:10px;
+}
+
+/* CARDS */
+.card{
+    background:white;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* STATS */
+.stats{
+    display:flex;
+    gap:8px;
+}
+.box{
+    flex:1;
+    padding:10px;
+    border-radius:10px;
+    color:white;
+    text-align:center;
+    font-size:14px;
+}
+.green{background:#2ecc71;}
+.red{background:#e74c3c;}
+.orange{background:#f39c12;}
+
+/* INPUT */
+input, select{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    margin-bottom:8px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:14px;
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:10px;
+    background:#1f3c88;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:14px;
+}
+
+/* ITEM */
+.item{
+    padding:10px;
+    border-bottom:1px solid #eee;
+    font-size:14px;
+}
+
+/* SMALL */
+small{
+    color:#666;
+}
+
+/* FLOAT MENU (mobil uygulama hissi) */
+.menu{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:white;
+    display:flex;
+    border-top:1px solid #ddd;
+}
+
+.menu a{
+    flex:1;
+    text-align:center;
+    padding:10px;
+    font-size:12px;
+    text-decoration:none;
+    color:#333;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">📊 Lojistik Panel</div>
+
+<div class="container">
+
+<!-- STATS -->
+<div class="card">
+    <div class="stats">
+        <div class="box green">Gelir<br>{{ gelir }} ₺</div>
+        <div class="box red">Gider<br>{{ gider }} ₺</div>
+        <div class="box orange">Kâr<br>{{ kar }} ₺</div>
+    </div>
+</div>
+
+<!-- SEARCH -->
+<div class="card">
+<form action="/ara" method="GET">
+    <input name="q" placeholder="🔍 Ara (firma / plaka)">
+    <button>Ara</button>
+</form>
+</div>
+
+<!-- FİRMA -->
+<div class="card">
+<h4>➕ Firma</h4>
+<form method="POST" action="/firma-ekle">
+    <input name="ad" placeholder="Firma adı">
+    <button>Kaydet</button>
+</form>
+</div>
+
+<!-- SEFER -->
+<div class="card">
+<h4>🚚 Sefer</h4>
+<form method="POST" action="/sefer-ekle">
+
+<select name="firma">
+    {% for f in firmalar %}
+        <option value="{{ f.ad }}">{{ f.ad }}</option>
+    {% endfor %}
+</select>
+
+<input name="nakliyeci" placeholder="Nakliyeci">
+<input name="plaka" placeholder="Plaka">
+<input name="rota" placeholder="Rota">
+<input name="gelir" placeholder="Gelir">
+<input name="gider" placeholder="Gider">
+
+<button>Kaydet</button>
+</form>
+</div>
+
+<!-- SEFERLER -->
+<div class="card">
+<h4>📦 Seferler</h4>
+
+{% for s in seferler %}
+<div class="item">
+<b>{{ s.firma }}</b><br>
+<small>{{ s.nakliyeci }} | {{ s.plaka }}</small><br>
+💰 {{ s.kar }} ₺
+</div>
+{% endfor %}
+</div>
+
+<!-- CARİ -->
+<div class="card">
+<h4>🏢 Müşteriler</h4>
+
+{% for c in cariler_f %}
+<div class="item">
+<b>{{ c.firma }}</b> - {{ c.alacak }} ₺
+
+<form method="POST" action="/firma-tahsilat">
+    <input type="hidden" name="firma" value="{{ c.firma }}">
+    <input name="tutar" placeholder="Tutar">
+    <button>Ödeme</button>
+</form>
+</div>
+{% endfor %}
+</div>
+
+<div class="card">
+<h4>🚛 Nakliyeciler</h4>
+
+{% for n in cariler_n %}
+<div class="item">
+<b>{{ n.nakliyeci }}</b> - {{ n.borc }} ₺
+
+<form method="POST" action="/nakliyeci-odeme">
+    <input type="hidden" name="nakliyeci" value="{{ n.nakliyeci }}">
+    <input name="tutar" placeholder="Tutar">
+    <button>Öde</button>
+</form>
+</div>
+{% endfor %}
+</div>
+
+</div>
+
+<!-- ALT MENÜ -->
+<div class="menu">
+    <a href="/dashboard">🏠</a>
+    <a href="/faturalar">📄</a>
+    <a href="/excel-haftalik">📊</a>
+    <a href="/logout">🚪</a>
+</div>
+
+</body>
+</html>

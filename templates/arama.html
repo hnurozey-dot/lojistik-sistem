@@ -1,0 +1,25 @@
+<h1>🔍 Arama Sonuçları</h1>
+
+<a href="/dashboard">⬅ Geri Dön</a>
+
+<hr>
+
+<h3>Aranan: {{ q }}</h3>
+
+<hr>
+
+{% if seferler|length == 0 %}
+    <p>Sonuç bulunamadı.</p>
+{% endif %}
+
+{% for s in seferler %}
+<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px;">
+    <p><b>Firma:</b> {{ s.firma }}</p>
+    <p><b>Nakliyeci:</b> {{ s.nakliyeci }}</p>
+    <p><b>Plaka:</b> {{ s.plaka }}</p>
+    <p><b>Rota:</b> {{ s.rota }}</p>
+    <p><b>Gelir:</b> {{ s.gelir }} ₺</p>
+    <p><b>Gider:</b> {{ s.gider }} ₺</p>
+    <p><b>Kâr:</b> {{ s.kar }} ₺</p>
+</div>
+{% endfor %}

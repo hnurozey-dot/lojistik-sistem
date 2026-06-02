@@ -1,0 +1,22 @@
+<h1>Fatura Arşivi</h1>
+
+<a href="/dashboard">⬅ Geri</a>
+
+<hr>
+
+{% for f in faturalar %}
+
+<div style="border:1px solid #ccc; padding:10px; margin:10px;">
+
+    <p><b>Firma:</b> {{ f.firma }}</p>
+    <p><b>Tip:</b> {{ f.tip }}</p>
+    <p><b>Tutar:</b> {{ f.tutar }} ₺</p>
+    <p><b>Tarih:</b> {{ f.tarih }}</p>
+
+    <a href="/uploads/{{ f.dosya }}" target="_blank">
+        📄 PDF Görüntüle
+    </a>
+
+</div>
+
+{% endfor %}
